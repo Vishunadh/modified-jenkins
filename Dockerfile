@@ -1,14 +1,9 @@
-FROM jenkins/jenkins:lts
+FROM node:10-alpine
 
-USER root
+RUN mkdir /app
+COPY index.js /app
+WORKDIR /app
+RUN npm install express
+EXPOSE 4444
 
-ENV DOCKERVERSION=18.03.1-ce
-
-RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKERVERSION}.tgz \
-  && tar xzvf docker-${DOCKERVERSION}.tgz --strip 1 \
-                 -C /usr/local/bin docker/docker \
-  && rm docker-${DOCKERVERSION}.tgz
-
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl \
-	&& chmod +x ./kubectl \
-	&& mv ./kubectl /usr/local/bin/kubectl
+CMD ["node", "index.js"]
